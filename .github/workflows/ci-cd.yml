@@ -1,0 +1,41 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login Dockerhub
+      
+      run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}      
+
+    - name: Build the Docker image
+      run: docker build -t daebak .
+
+    - name: taging
+      run: docker tag daebak:latest ${{ secrets.DOCKERHUB_USERNAME }}/daebak:latest
+
+    - name: Push to Dockerhub
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/daebak:latest
+    
+  deploy:
+
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+    - name: Pull Docker image
+      run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/daebak:latest
+    - name: Delete Old docker container
+      run: sudo docker rm -f daebak-container || true
+    - name: Run Docker Container
+      run: sudo docker run -d -p 3000:3000 --name daebak-container ${{ secrets.DOCKERHUB_USERNAME }}/daebak
