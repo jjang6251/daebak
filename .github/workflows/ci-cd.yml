@@ -22,7 +22,7 @@ jobs:
       run: echo "${{ secrets.DEVELOPMENT_ENV }}" >> .development.env
 
     - name: Build the Docker image
-      run: docker build --build-arg DEVELOPMENT_ENV=${{secrets.DEVELOPMENT_ENV}}/.development.env \ -t daebak .
+      run: docker build --build-arg DEVELOPMENT_ENV=.development.env -t daebak .
 
     - name: taging
       run: docker tag daebak:latest ${{ secrets.DOCKERHUB_USERNAME }}/daebak:latest
