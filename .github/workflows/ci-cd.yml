@@ -22,7 +22,15 @@ jobs:
       run: echo "${{ secrets.DEVELOPMENT_ENV }}" >> .development.env
 
     - name: Build the Docker image
-      run: docker build -t daebak .
+      run: docker build \
+          --build-arg DB_HOST=${{ secrets.DB_HOST }} \
+          --build-arg DB_USERNAME=${{ secrets.DB_USERNAME }} \
+          --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+          --build-arg DB_NAME=${{ secrets.DB_NAME }} \
+          --build-arg SYNCHRONIZE=${{ secrets.SYNCHRONIZE }} \
+          --build-arg DROPSCHEMA=${{ secrets.DROPSCHEMA }} \
+          --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+          -t daebak .
 
     - name: taging
       run: docker tag daebak:latest ${{ secrets.DOCKERHUB_USERNAME }}/daebak:latest

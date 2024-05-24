@@ -15,7 +15,6 @@ import { DataSource, DataSourceOptions } from 'typeorm';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'development' ? '.development.env' : '.test.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -32,7 +31,6 @@ import { DataSource, DataSourceOptions } from 'typeorm';
           entities: [Member],
           synchronize: configService.get<string>('SYNCHRONIZE') === 'true',
           dropSchema: configService.get<string>('DROPSCHEMA') === 'true',
-          // dropSchema: false
         };
 
         // 설정 값을 로그로 출력합니다.
