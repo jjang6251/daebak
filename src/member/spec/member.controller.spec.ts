@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MemberController } from './member.controller';
-import { MemberService } from './member.service';
+import { MemberController } from '../member.controller';
+import { MemberService } from '../member.service';
 import { Repository } from 'typeorm';
-import { Member } from './entities/member.entity';
+import { Member } from '../entities/member.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { HttpException, HttpStatus } from '@nestjs/common';
 

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MemberService } from './member.service';
+import { MemberService } from '../member.service';
 import { Repository } from 'typeorm';
-import { Member } from './entities/member.entity';
+import { Member } from '../entities/member.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('MemberService', () => {

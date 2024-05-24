@@ -40,8 +40,8 @@ export class MemberService {
     return `This action returns all member`;
   }
 
-  findOne(useremail: string) {
-    return this.memberRepository.findOne({where: {useremail}});
+  async findOne(useremail: string) {
+    return await this.memberRepository.findOne({where: {useremail}});
   }
 
   update(id: number, updateMemberDto: UpdateMemberDto) {
