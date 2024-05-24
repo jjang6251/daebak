@@ -8,8 +8,8 @@ WORKDIR /usr/src/app
 # .development.env 파일을 이미지 내부에 복사합니다.
 COPY .development.env /usr/src/app/.development.env
 
-# 환경 변수를 설정합니다.
-RUN export $(cat /usr/src/app/.development.env | xargs)
+# # 환경 변수를 설정합니다.
+# RUN export $(cat /usr/src/app/.development.env | xargs)
 
 # 패키지 파일 복사
 COPY package*.json ./
