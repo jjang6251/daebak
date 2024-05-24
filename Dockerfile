@@ -4,7 +4,7 @@ FROM node:21
 # 앱 디렉토리 생성
 WORKDIR /usr/src/app
 
-
+RUN touch /usr/src/app/.development.env
 # .development.env 파일을 이미지 내부에 복사합니다.
 COPY .development.env /usr/src/app/.development.env
 
