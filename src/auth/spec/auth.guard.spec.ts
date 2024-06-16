@@ -16,6 +16,4 @@ describe('AuthGuard', () => {
     const configService = new ConfigService();
     expect(authGuard).toBeDefined();
   });
-
-  it('jwt')
 });
