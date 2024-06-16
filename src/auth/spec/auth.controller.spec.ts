@@ -119,13 +119,102 @@ describe('AuthController', () => {
     }
   });
 
-  it('로그인 체크(헤더 없을 경우)', async () => {
-    try {
-      await controller.check();
-    } catch (error) {
-      expect(error).toBeInstanceOf(UnauthorizedException);
-      expect(error.message).toBe('Unauthorized');
-      expect(error.getStatus()).toBe(HttpStatus.UNAUTHORIZED);
-    }
+
+  describe('로그인 체크', () => {
+    it('헤더 없을 경우', async () => {
+      const mockAuthGuard = {
+        canActivate: jest.fn().mockImplementation((context: ExecutionContext) => {
+          const req = context.switchToHttp().getRequest();
+          req.headers = {}; // 헤더가 없는 경우
+          return true;
+        }),
+      };
+
+      const module: TestingModule = await Test.createTestingModule({
+        imports: [
+          JwtModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
+              secret: configService.get<string>('JWT_SECRET', 'secret'),
+              signOptions: { expiresIn: '10h' },
+            }),
+          }),
+        ],
+        controllers: [AuthController],
+        providers: [
+          AuthService,
+          {
+            provide: AuthGuard,
+            useValue: mockAuthGuard,
+          },
+          MemberService,
+          {
+            provide: getRepositoryToken(Member),
+            useValue: memberRepository,
+          },
+          ConfigService,
+          Reflector,
+        ],
+      }).compile();
+
+      controller = module.get<AuthController>(AuthController);
+
+      try {
+        await controller.check();
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnauthorizedException);
+        expect(error.message).toBe('Unauthorized');
+        expect(error.getStatus()).toBe(HttpStatus.UNAUTHORIZED);
+      }
+    });
+
+    it('헤더 있을 경우', async () => {
+      const mockAuthGuard = {
+        canActivate: jest.fn().mockImplementation((context: ExecutionContext) => {
+          const req = context.switchToHttp().getRequest();
+          req.headers = {
+            authorization: 'Bearer some-token', // 헤더가 있는 경우
+          };
+          return true;
+        }),
+      };
+
+      const module: TestingModule = await Test.createTestingModule({
+        imports: [
+          JwtModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
+              secret: configService.get<string>('JWT_SECRET', 'secret'),
+              signOptions: { expiresIn: '10h' },
+            }),
+          }),
+        ],
+        controllers: [AuthController],
+        providers: [
+          AuthService,
+          {
+            provide: AuthGuard,
+            useValue: mockAuthGuard,
+          },
+          MemberService,
+          {
+            provide: getRepositoryToken(Member),
+            useValue: memberRepository,
+          },
+          ConfigService,
+          Reflector,
+        ],
+      }).compile();
+
+      controller = module.get<AuthController>(AuthController);
+
+      const response = await controller.check();
+      expect(response).toBeUndefined(); // check() 메서드가 아무것도 반환하지 않으므로 undefined 확인
+    });
   });
+  
 });
+
+

@@ -13,7 +13,7 @@ describe('MemberController', () => {
 
   beforeEach(async () => {
     memberRepository = {
-      findOne: jest.fn().mockResolvedValue(null),  // findOne이 기본적으로 null을 반환하도록 모킹
+      findOne: jest.fn().mockResolvedValue(null),  // findOne이 기본적으로 null을 반환하도록 모킹 ResolvedValue는 비동기적으로 반환.
       create: jest.fn().mockReturnValue({
         id: 1,
         useremail: 'jjang6252@gmail.com',
