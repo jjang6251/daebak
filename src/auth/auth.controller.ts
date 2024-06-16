@@ -16,7 +16,6 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @Get('check')
-  check(@Request() req) {
-    // return req.user;
+  check() {
   }
 }
